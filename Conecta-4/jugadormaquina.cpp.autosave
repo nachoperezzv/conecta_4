@@ -459,7 +459,47 @@ int JugadorMaquina::heuristica()
                     }
 
                     if(fichasPegadas2 and fichasPegadas3){
-
+                        
+                        //direccion 1:
+                        if(c.x==1 and c.y==-1){
+                            bool sePuedeCasilIzq = (tablero->obtenerCasilla(i+2,j-3) != 0) and isFeasible({i+3*c.x,j+3*c.y});
+                            bool noHayCasillaIzq = tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == 0;
+                            bool noBloqueada     = tablero
+                            
+                            if(sePuedeCasilIzq and noHayCasillaIzq)      
+                                valorO += 20000;
+                                                /* [?][ ][ ][ ]
+                                                 * [O][O][ ][ ]
+                                                 * [X][X][O][ ]
+                                                 * [O][X][X][O]
+                                                 */
+                        }
+                        //direccion 2:
+                        if(c.x==1 and c.y==0)
+                            valorO += 20000;
+                                                /* [ ][ ][?][ ]
+                                                 * [O][X][O][ ]
+                                                 * [X][O][O][ ]
+                                                 * [O][X][O][X]
+                                                 */                        
+                        
+                        //direccion 3:
+                        if(c.x==1 and c.y==1)
+                            valorO += 20000;
+                                                /* [ ][ ][ ][?]
+                                                 * [ ][ ][O][X]
+                                                 * [ ][O][X][O]
+                                                 * [O][X][O][X]
+                                                 */                        
+                        
+                        //direccion 4:
+                        if(c.x==0 and c.y==1)
+                            valorO += 20000;
+                                                /* [X][X][X][ ]
+                                                 * [O][O][O][?]
+                                                 */
+                        
+                        
                     }
 
                     if(fichasPegadas2 and fichasPegadas3 and fichasPegadas4){
