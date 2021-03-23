@@ -143,7 +143,7 @@ int JugadorMaquina::heuristica()
                                  */
                                 bool noHayCasillaIzqIzq = (isFeasible({i+2*c.x,j+2*c.y}) and tablero->obtenerCasilla(i+2*c.x,j+2*c.y) == 0);
                                 bool siHayCasillaIzqIzq = (isFeasible({i+2*c.x,j+2*c.y}) and tablero->obtenerCasilla(i+2*c.x,j+2*c.y) == jugador);
-                                bool sePuedePonerIzqIzq = tablero->obtenerCasilla(i+2*c.x,j+2*c.y) != 0;
+                                bool sePuedePonerIzqIzq = tablero->obtenerCasilla(i+1,j-2) != 0;
 
                                 if(noHayCasillaIzqIzq and sePuedePonerIzqIzq)
                                     valorO += 500;
@@ -161,7 +161,7 @@ int JugadorMaquina::heuristica()
                                                      */
                                     bool siHayCasillaIzqIzqIzq = (isFeasible({i+3*c.x,j+3*c.y}) and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == jugador);
                                     bool noHayCasillaIzqIzqIzq = (isFeasible({i+3*c.x,j+3*c.y}) and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == 0);
-                                    bool sePuedePonerIzqIzqIzq = tablero->obtenerCasilla(i+3*c.x,j+3*c.y) != 0;
+                                    bool sePuedePonerIzqIzqIzq = tablero->obtenerCasilla(i+2,j-3) != 0;
 
                                     if(siHayCasillaIzqIzqIzq)
                                         valorO += 20000;
@@ -172,20 +172,107 @@ int JugadorMaquina::heuristica()
                                                              */
                                     if(noHayCasillaIzqIzqIzq and sePuedePonerIzqIzqIzq)
                                         valorO += 4000;
+                                                            /*  [/][ ][ ][ ]
+                                                             *  [X][O][ ] []
+                                                             *  [X][O][/][ ]
+                                                             *  [O][X][O][O]
+                                                             */
                                 }
                             }
                         }
 
                         //direccion 2
                         if(c.x==1 and c.y==0){
+                            bool noHayCasillaEnc = (isFeasible({i+c.x,j+c.y}) and tablero->obtenerCasilla(i+c.x,j+c.y) == 0);
+                            if(noHayCasillaEnc)
+                                valorO += 500;
+                                                /* [ ][/][ ]
+                                                 * [ ][O][ ]
+                                                 * [ ][X][ ]
+                                                 */
+                        }
 
+                        //direccion 3
+                        if(c.x==1 and c.y==1){
+                            bool noHayCasillaDch = (isFeasible({i+c.x,j+c.y}) and tablero->obtenerCasilla(i+c.x,j+c.y) == 0);   //Se comprueba casilla izquierda este vacía
+                            bool sePuedePonerDch = tablero->obtenerCasilla(i,j+1) != 0;
+
+                            if(noHayCasillaDch and sePuedePonerDch){
+                                /*  [ ][ ][ ]
+                                 *  [O][/][ ]
+                                 *  [X][O][O]
+                                 *  [O][X][O]
+                                 */
+                                bool noHayCasillaDchDch = (isFeasible({i+2*c.x,j+2*c.y}) and tablero->obtenerCasilla(i+2*c.x,j+2*c.y) == 0);
+                                bool siHayCasillaDchDch  = (isFeasible({i+2*c.x,j+2*c.y}) and tablero->obtenerCasilla(i+2*c.x,j+2*c.y) == jugador);
+                                bool sePuedePonerDchDch  = tablero->obtenerCasilla(i+1,j+2) != 0;
+
+                                if(noHayCasillaDchDch and sePuedePonerDchDch)
+                                    valorO += 500;
+                                                    /*  [/][ ][ ]
+                                                     *  [O][/][ ]
+                                                     *  [X][O][O]
+                                                     *  [O][X][O]
+                                                     */
+                                if(siHayCasillaDchDch){
+                                    valorO += 1000;
+                                                    /*  [O][ ][ ]
+                                                     *  [O][/][ ]
+                                                     *  [X][O][O]
+                                                     *  [O][X][O]
+                                                     */
+                                    bool siHayCasillaDchDchDch = (isFeasible({i+3*c.x,j+3*c.y}) and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == jugador);
+                                    bool noHayCasillaDchDchDch = (isFeasible({i+3*c.x,j+3*c.y}) and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == 0);
+                                    bool sePuedePonerDchDchDch = tablero->obtenerCasilla(i+2,j+3) != 0;
+
+                                    if(siHayCasillaDchDchDch)
+                                        valorO += 20000;
+                                                            /*  [O][ ][ ][ ]
+                                                             *  [X][O][ ] []
+                                                             *  [X][O][/][ ]
+                                                             *  [O][X][O][O]
+                                                             */
+                                    if(noHayCasillaDchDchDch and sePuedePonerDchDchDch)
+                                        valorO += 4000;
+                                                            /*  [/][ ][ ][ ]
+                                                             *  [X][O][ ] []
+                                                             *  [X][O][/][ ]
+                                                             *  [O][X][O][O]
+                                                             */
+                                }
+                            }
+                        }
+
+                        //direccion 4
+                        if(c.x==0 and c.y==1){
+                            bool noHayCasillaDch = (isFeasible({i+c.x,j+c.y}) and tablero->obtenerCasilla(i+c.x,j+c.y) == 0);
+                            bool sePuedePonerDch = (isFeasible({i-1,j+1}) and tablero->obtenerCasilla(i-1,j+1) != 0);
+
+                            if(sePuedePonerDch and noHayCasillaDch){
+                                /* [ ][O][/][ ][ ]
+                                 * [ ][X][O][X][ ]
+                                 */
+                                bool noHayCasillaDchDch = (isFeasible({i+2*c.x,j+2*c.y}) and tablero->obtenerCasilla(i+2*c.x,j+2*c.y) == 0);
+                                bool sePuedePonerDchDch = (isFeasible({i-1,j+2}) and tablero->obtenerCasilla(i-1,j+2) != 0);
+                                bool siHayCasillaDchDch = (isFeasible({i+2*c.x,j+2*c.y}) and tablero->obtenerCasilla(i+2*c.x,j+2*c.y) == jugador);
+
+                                bool noHayCasillaDchDchDch = (isFeasible({i+3*c.x,j+3*c.y}) and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == 0);
+                                bool sePuedePonerDchDchDch = (isFeasible({i-1,j+2}) and tablero->obtenerCasilla(i-1,j+2) != 0);
+
+                                if(siHayCasillaDchDch){
+                                       /* [ ][O][/][O][ ]
+                                        * [ ][X][O][X][ ]
+                                        */
+                                }
+                                if(sePuedePonerDchDch and noHayCasillaDchDch){
+                                        /* [ ][O][/][/][ ]
+                                         * [ ][X][O][X][ ]
+                                         */
+                                }
+                            }
                         }
 
 
-                        //direccion 3
-
-
-                        //direccion 4
                     }
 
                     if(fichasPegadas2){
