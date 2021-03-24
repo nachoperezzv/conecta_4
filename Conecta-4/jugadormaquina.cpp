@@ -1071,10 +1071,65 @@ int JugadorMaquina::heuristica()
                     }
                 }
                 //Aqui termina el calculo para el tablero del jugador MIN
-                //else{
-                //
-                //}
 
+                //Aqui se van a hacer una serie de comprobaciones en las casillas vacias. Para cada casilla vacia que detecte se mirara en la direccion que marque el bucle con la variable 'pos'.
+                //Esto se hace en un else despues de haber cerciorado que las casillas no sean ni jugador ni oponente. Esta función se ha añadido despues de detectar un error.
+                /*
+                 *                          [ ][ ][ ][ ][ ][ ][ ]
+                 *                          [ ][ ][ ][ ][ ][ ][ ]
+                 *                          [ ][ ][ ][ ][ ][ ][ ]
+                 *                          [ ][ ][O][ ][ ][ ][ ]
+                 *                          [ ][ ][X][O][ ][ ][ ]
+                 *                          [ ][X][O][X][O][ ][ ]
+                 *                          [ ][X][O][X][X][?][ ]
+                 */
+                //La posibilidad de hacer ese tres en ralla no se detectaba y eso se debe a que las posiciones que se comprueban son en las direcciones que no se han visitado aun en el bucle que
+                //recorre el casillero. Lo que se pretende es que condicional detecte ese conjunto de dos o tres piezas juntas y le asigne el valor a jugador o a oponente. Es cierto que en un
+                //principio, el coste computacional puede ser algo mayor. Pero en el momento que se va rellenando el tablero, el tiempo se reduce y las estimaciones de mejores tablero mejoran mucho.
+
+                else{
+                    if(isFeasible({i+c.x,j+c.y}) and isFeasible({i+2*c.x,j+2*c.y}) and isFeasible({i+3*c.x,j+3*c.y})){
+                        if(tablero->obtenerCasilla(i+c.x,j+c.y)==jugador){
+                            if(tablero->obtenerCasilla(i+2*c.x,j+2*c.y)==jugador and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) != oponente){
+                                valorO += 6000;
+                                        /*
+                                         *  [ ][ ][ ][ ][ ]
+                                         *  [ ][O][ ][ ][ ]
+                                         *  [ ][X][O][ ][ ]
+                                         *  [ ][X][X][?][ ]
+                                         */
+                                if(tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == jugador)
+                                    valorO += 30000;
+                                                    /*
+                                                     *  [O][ ][ ][ ][ ]
+                                                     *  [X][O][ ][ ][ ]
+                                                     *  [X][X][O][ ][ ]
+                                                     *  [O][X][X][?][ ]
+                                                     */
+                            }
+                        }
+                    else if(tablero->obtenerCasilla(i+c.x,j+c.y)==oponente){
+                        if(tablero->obtenerCasilla(i+2*c.x,j+2*c.y)==oponente and tablero->obtenerCasilla(i+3*c.x,j+3*c.y) != jugador){
+                            valorX += 6000;
+                                    /*
+                                     *  [ ][ ][ ][ ][ ]
+                                     *  [ ][O][ ][ ][ ]
+                                     *  [ ][X][O][ ][ ]
+                                     *  [ ][X][X][?][ ]
+                                     */
+                            if(tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == oponente)
+                                valorX += 30000;
+                                                /*
+                                                 *  [O][ ][ ][ ][ ]
+                                                 *  [X][O][ ][ ][ ]
+                                                 *  [X][X][O][ ][ ]
+                                                 *  [O][X][X][?][ ]
+                                                 */
+                        }
+                    }
+                    }
+                }
+                //Aqui acaba la comprobacion para las casillas vacias.
             }
             //Aqui acaba la iteracion de direcciones para las casillas
         }
