@@ -251,7 +251,7 @@ int JugadorMaquina::heuristica()
 
                         //direccion 4
                         if(c.x==0 and c.y==1){
-                            bool sePuedePonerDch =  (isFeasible({i-1,j+1}) and tablero->obtenerCasilla(i-1,j+1)!=0) or i==0;
+                            bool sePuedePonerDch =  isFeasible({i-1,j+1}) and (tablero->obtenerCasilla(i-1,j+1)!=0 or i==0);
 
                             if(sePuedePonerDch){
                                                 /* [ ][ ]    [O][/]
@@ -269,36 +269,64 @@ int JugadorMaquina::heuristica()
                                     bool sePuedePonerDchDchDch = tablero->obtenerCasilla(i-1,j+3) != 0 or i==0;
                                     bool siHayCasillaDchDchDch = tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == jugador;
 
-                                    if(siHayCasillaDchDch){
-                                           /* [ ][O][/][O][ ]
-                                            * [ ][X][O][X][ ]
-                                            */
-                                        if(siHayCasillaDchDchDch)
-                                            valorO += 30000;
-                                                   /* [ ][O][/][O][O]
-                                                    * [ ][X][O][X][X]
-                                                    */
-                                        else if(sePuedePonerDchDchDch and noHayCasillaDchDchDch)
-                                            valorO += 8000;
-                                                    /* [ ][O][/][O][/]
-                                                     * [ ][X][O][X][X]
-                                                     */
+                                    if(isFeasible({i,j-1}) and tablero->obtenerCasilla(i,j-1) != oponente){
+                                        /* [ ][O][/][ ][ ]
+                                         */
+                                        if(siHayCasillaDchDch){
+                                               /* [?][O][/][O][ ]
+                                                * [ ][X][O][X][ ]
+                                                */
+                                            if(siHayCasillaDchDchDch){
+                                                valorO += 30000;
+                                                       /* [ ][O][/][O][O]
+                                                        * [ ][X][O][X][X]
+                                                        */
+                                                if((tablero->obtenerCasilla(i-1,j-1)!=0 or i==0) and (tablero->obtenerCasilla(i,j-1)==0)){
+                                                    valorO += 10000;
+                                                        /* [/][O][/][O][O]
+                                                         */
+                                                    if(isFeasible({i,j-2}) and (tablero->obtenerCasilla(i-1,j-2)!=0 or i==0) and tablero->obtenerCasilla(i,j-2)!=oponente)
+                                                        valorO += 10000;
+                                                            /* [/ o O][/][O][/][O][O]
+                                                             */
+                                                }
+                                            }
+                                            else if(sePuedePonerDchDchDch and noHayCasillaDchDchDch)
+                                                valorO += 8000;
+                                                        /* [ ][O][/][O][/]
+                                                         * [ ][X][O][X][X]
+                                                         */
+                                        }
+                                        else{
+                                            if(sePuedePonerDchDch and noHayCasillaDchDch)
+                                                /* [ ][O][/][/][ ]
+                                                 * [ ][X][O][X][ ]
+                                                 */
+                                                if(siHayCasillaDchDchDch){
+                                                    valorO += 2000;
+                                                            /* [ ][O][/][/][O]
+                                                             * [ ][X][O][X][X]
+                                                             */
+                                                    if((tablero->obtenerCasilla(i-1,j-1)!=0 or i==0) and (tablero->obtenerCasilla(i,j-1)==0)){
+                                                        valorO += 10000;
+                                                            /* [/][O][/][O][O]
+                                                             */
+                                                        if(isFeasible({i,j-2}) and (tablero->obtenerCasilla(i-1,j-2)!=0 or i==0) and tablero->obtenerCasilla(i,j-2)!=oponente)
+                                                            valorO += 10000;
+                                                                /* [/ o O][/][O][/][O][O]
+                                                                 */
+                                                    }
+                                                }
+                                                else if(sePuedePonerDchDchDch and noHayCasillaDchDchDch)
+                                                    valorO += 500;
+                                                        /* [ ][ ][ ][ ]
+                                                         * [O][/][/][/]
+                                                         */
+                                        }
                                     }
                                     else{
-                                        if(sePuedePonerDchDch and noHayCasillaDchDch)
-                                            /* [ ][O][/][/][ ]
-                                             * [ ][X][O][X][ ]
-                                             */
-                                            if(siHayCasillaDchDchDch)
-                                            valorO += 2000;
-                                                    /* [ ][O][/][/][O]
-                                                     * [ ][X][O][X][X]
-                                                     */
-                                            else if(sePuedePonerDchDchDch and noHayCasillaDchDchDch)
-                                                valorO += 500;
-                                                    /* [ ][ ][ ][ ]
-                                                     * [O][/][/][/]
-                                                     */
+                                        /* [X][O][/][ ][ ]
+                                         */
                                     }
                                 }
                             }
@@ -425,14 +453,52 @@ int JugadorMaquina::heuristica()
                                     bool sePuedePonerDchDchDch = tablero->obtenerCasilla(i-1,j+3) != 0 or i==0;
                                     bool siHayCasillaDchDchDch = tablero->obtenerCasilla(i+3*c.x,j+3*c.y) == jugador;
 
-                                    if(siHayCasillaDchDchDch)
-                                        valorO += 30000;
-                                           /* [O][O][/][O]
-                                            */
-                                    else if(sePuedePonerDchDchDch and noHayCasillaDchDchDch)
-                                        valorO += 8000;
-                                            /* [O][O][/][/]
-                                             */
+                                    if(isFeasible({i,j-1}) and tablero->obtenerCasilla(i,j-1)==0){
+                                        if(siHayCasillaDchDchDch){
+                                            valorO += 30000;
+                                               /* [/][O][O][/][O]
+                                                */
+                                            if(isFeasible({i,j-2}) and tablero->obtenerCasilla(i,j-2)!=oponente){
+                                                valorO += 20000;
+                                                        /* [/ o O][/][O][O][/][O]
+                                                         */
+                                                if(tablero->obtenerCasilla(i,j-2)==jugador)
+                                                    valorO += 20000;
+                                                                /* [O][/][O][O][/][O]
+                                                                 */
+                                            }
+
+                                        }
+                                        else{
+                                            if(sePuedePonerDchDchDch and noHayCasillaDchDchDch){
+                                                //valorO += 8000;
+                                                    /* [/][O][O][/][/]
+                                                     */
+                                                if(isFeasible({i,j-2}) and tablero->obtenerCasilla(i,j-2) != oponente){
+                                                    /* [/ o O][/][O][O][/][/]
+                                                     */
+                                                    if(tablero->obtenerCasilla(i,j-2)==jugador)
+                                                        valorO += 30000;
+                                                            /* [O][/][O][O][/][/]
+                                                             */
+                                                    else
+                                                        valorO += 15000;
+                                                            /* [/][/][O][O][/][/]
+                                                             */
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        if(siHayCasillaDchDchDch)
+                                            valorO += 8000;
+                                               /* [X][O][O][/][O]
+                                                */
+                                        else if(sePuedePonerDchDchDch and noHayCasillaDchDchDch)
+                                            valorO += 4000;
+                                                /* [X][O][O][/][/]
+                                                 */
+                                    }
                                 }
                             }
                         }

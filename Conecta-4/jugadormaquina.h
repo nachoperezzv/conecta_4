@@ -19,7 +19,7 @@ public:
     JugadorMaquina(Jugador *parent);
     void setTiempoExcedido(bool excedido);
 
-    const int NIVEL_DEFECTO = 6;
+    const int NIVEL_DEFECTO = 4;
 
 
 public slots:
