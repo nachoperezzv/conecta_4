@@ -14,8 +14,15 @@ void JugadorMaquina::comenzarBusqueda(const int jug)
 {
     jugador = jug;
     //Llama a la función Minimax que implementa el algoritmo para calcular la jugada
-    minimax(0, jugador);
-    columna = mejorJug.col;
+
+    //Llamada a función MINIMAX CON poda alfa-beta
+        //minimax(0, jugador,INT_MIN, INT_MAX);
+        //columna = aux;
+
+    //Llamada a función MINIMÁX SIN poda alfa-beta
+        minimax(0,jugador);
+        columna = mejorJug.col;
+
 
     //No borrar esta línea!!
     emit trabajoFinalizado(columna, jugador);
@@ -30,6 +37,76 @@ void JugadorMaquina::setTiempoExcedido(bool excedido) {
  * El tablero de juego se encuentra en la variable tablero.
  * Al final de la función de la variable columna debe contener la tirada.
  */
+
+    //ESTE CÓDIGO que se muestra a continuación comentado es el correspondiente a un MINIMÁX que incluye una
+    //poda alfa-beta. Sin embargo, las podas producidas no son efectivas en comparación con las otras. Esto
+    //se cree que se debe a la evaluación que se le ha dado a los diferentes tableros.
+/*
+int JugadorMaquina::minimax(int nivel_profundidad, int j, int alfa, int beta)
+{
+    if(!tiempoExcedido){
+        if(//condiciones de fin, donde se es hoja
+                nivel_profundidad == NIVEL_DEFECTO or
+                tablero->cuatroEnRaya()            or
+                tablero->tableroLleno()
+                ){
+            return heuristica();
+        }
+        else{
+            int fila;
+            nivel_profundidad++;
+
+            if(j == jugador){
+                //mejorJug.val = alfa;
+                for(int i=0;i<COLS_TABLERO;i++){
+                    fila = tablero->comprobarColumna(i);
+                    if(fila != -1){
+                        tablero->ponerFicha(i,jugador);
+                        int MM = minimax(nivel_profundidad,giveOponent(),alfa,beta);
+                        tablero->cambiarCasilla(fila,i,0);
+
+                        if(MM > alfa){
+                            alfa = MM;
+
+                            if(nivel_profundidad==1){
+                                aux = i;
+                                emit resultadoParcial(i);
+                            }
+                            if(alfa>=beta)
+                                return beta;
+                        }
+                    }
+                }
+                return alfa;            //  PODA ALFA-BETA
+               // return mejorJug.val;
+            }
+
+            else{
+                //mejorOpo.val = beta;
+                for(int i=0;i<COLS_TABLERO;i++){
+                    fila = tablero->comprobarColumna(i);
+                    if(fila != -1){
+                        tablero->ponerFicha(i,giveOponent());
+                        int MM = minimax(nivel_profundidad,jugador,alfa,beta);
+                        tablero->cambiarCasilla(fila,i,0);
+
+                        if(MM < beta){
+                            beta = MM;
+                            if(alfa>=beta)
+                                return alfa;
+                        }
+                    }                    
+                }
+                return beta;            //  PODA ALFA-BETA
+                //return mejorOpo.val;
+            }
+        }
+    }
+    else
+        return 0;
+}
+*/
+
 int JugadorMaquina::minimax(int nivel_profundidad, int j)
 {
     if(!tiempoExcedido){
@@ -970,11 +1047,22 @@ int JugadorMaquina::heuristica()
                         if(c.x==0 and c.y==1){
                             bool sePuedeCasillaDchDchDch = isFeasible({i,j+3}) and (tablero->obtenerCasilla(i-1,j+3) != 0 or i==0);
 
-                            if(sePuedeCasillaDchDchDch)
+                            if(sePuedeCasillaDchDchDch or (isFeasible({i,j-1}) and tablero->obtenerCasilla(i,j-1)==0)){
                                 valorX += 50000;
                                                 /* [ ][ ][ ][ ]     [O][O][O][/]
                                                  * [O][O][O][/]  o  [X][X][X][X]
                                                  */
+                                                //               o
+                                                /*
+                                                 *          [/][O][O][O][/]
+                                                 */
+                            }
+                            else{
+                                if(isFeasible({i,j-1}) and tablero->obtenerCasilla(i,j-1)==0)
+                                    valorO += 50000;
+                                                /* [/][O][O][O][X]
+                                                 */
+                            }
                         }
                     }
 
@@ -983,6 +1071,9 @@ int JugadorMaquina::heuristica()
                     }
                 }
                 //Aqui termina el calculo para el tablero del jugador MIN
+                //else{
+                //
+                //}
 
             }
             //Aqui acaba la iteracion de direcciones para las casillas

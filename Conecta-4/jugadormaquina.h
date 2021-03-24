@@ -27,12 +27,18 @@ public slots:
 
 
 private:
-    int         minimax(int, int);
+    //int         minimax(int, int, int, int);
+    int         minimax(int,int);
+
     int         heuristica();
     int         giveOponent();
     bool        isFeasible(coord);
     valor_col   MAX(int, valor_col, int);
     valor_col   MIN(int, valor_col, int);
+
+    //int         alfa = INT_MIN;
+    //int         beta = INT_MAX;
+    int         aux;
 
 
     bool        tiempoExcedido; // Úsalo para detener el algoritmo minimax cuando sea true
