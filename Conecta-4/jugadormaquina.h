@@ -19,7 +19,7 @@ public:
     JugadorMaquina(Jugador *parent);
     void setTiempoExcedido(bool excedido);
 
-    const int NIVEL_DEFECTO = 4;
+    const int NIVEL_DEFECTO = 8;
 
 
 public slots:
@@ -27,8 +27,8 @@ public slots:
 
 
 private:
-    //int         minimax(int, int, int, int);
-    int         minimax(int,int);
+    int         minimax(int, int, int, int);
+    //int         minimax(int,int);
 
     int         heuristica();
     int         giveOponent();

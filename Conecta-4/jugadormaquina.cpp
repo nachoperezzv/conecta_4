@@ -16,12 +16,12 @@ void JugadorMaquina::comenzarBusqueda(const int jug)
     //Llama a la función Minimax que implementa el algoritmo para calcular la jugada
 
     //Llamada a función MINIMAX CON poda alfa-beta
-        //minimax(0, jugador,INT_MIN, INT_MAX);
-        //columna = aux;
+        minimax(0, jugador,INT_MIN, INT_MAX);
+        columna = aux;
 
     //Llamada a función MINIMÁX SIN poda alfa-beta
-        minimax(0,jugador);
-        columna = mejorJug.col;
+    //    minimax(0,jugador);
+    //    columna = mejorJug.col;
 
 
     //No borrar esta línea!!
@@ -41,7 +41,7 @@ void JugadorMaquina::setTiempoExcedido(bool excedido) {
     //ESTE CÓDIGO que se muestra a continuación comentado es el correspondiente a un MINIMÁX que incluye una
     //poda alfa-beta. Sin embargo, las podas producidas no son efectivas en comparación con las otras. Esto
     //se cree que se debe a la evaluación que se le ha dado a los diferentes tableros.
-/*
+
 int JugadorMaquina::minimax(int nivel_profundidad, int j, int alfa, int beta)
 {
     if(!tiempoExcedido){
@@ -105,8 +105,9 @@ int JugadorMaquina::minimax(int nivel_profundidad, int j, int alfa, int beta)
     else
         return 0;
 }
-*/
 
+
+/*
 int JugadorMaquina::minimax(int nivel_profundidad, int j)
 {
     if(!tiempoExcedido){
@@ -153,6 +154,7 @@ int JugadorMaquina::minimax(int nivel_profundidad, int j)
     else
         return 0;
 }
+*/
 
 valor_col JugadorMaquina::MAX(int a, valor_col b, int i){
     if(a > b.val){
